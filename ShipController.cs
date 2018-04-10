@@ -8,6 +8,9 @@ public class Control_Player : MonoBehaviour {
 	float min_x = -5f;
 	float max_x = 5f;
 	public float pad = 1f;
+	public GameObject Missle_proj;
+	public float gun_speed;
+	public float firingrate = 0.5f;
 	
 	// Use this for initialization
 	void Start () 
@@ -24,15 +27,41 @@ public class Control_Player : MonoBehaviour {
 		
 	}
 	
+	
+	void fire_type()
+	
+	{
+			
+		GameObject gun = Instantiate(Missle_proj,  transform.position, Quaternion.identity) as GameO bject ;
+		gun.rigidbody2D.velocity = new Vector3(0, gun_speed, 0);
+		
+	}
+	
+	
+	
 	// Update is called once per frame
 	void Update () 
 	
 	{
-//		Vector3 ShipPos = new Vector3(0.0f, this.transform.position.y, 2.5f );
+//		Vector3 ShipPos = new Vector3(0.0f, this.transform.position.y, 2.5f );   --> for mouse
 //		float mos_pos = Input.mousePosition.x / Screen.width * 2;
 //		ShipPos.x = Mathf.Clamp(mos_pos, 0.5f, 10.0f);
 //		this.transform.position = ShipPos;
-//		
+
+		if(Input.GetKeyDown(KeyCode.Space))
+			   
+		{
+		
+		InvokeRepeating("fire_type",0.000001f, firingrate);
+		
+		//GameObject gun = Instantiate(Missle_proj,  transform.position, Quaternion.identity) as GameObject ;  optional
+		//gun.rigidbody2D.velocity = new Vector3(0, gun_speed, 0);
+		}
+					
+		if(Input.GetKeyUp(KeyCode.Space)) { CancelInvoke("fire_type");}
+			
+		
+			
 		if (Input.GetKey(KeyCode.LeftArrow))
 		{
 			Vector3 ShipPos = this.transform.position;
@@ -67,8 +96,11 @@ public class Control_Player : MonoBehaviour {
 		//float X_news = Mathf.Clamp(transform.position.y, min_x, max_x);  // extra --> moving y axis
 		//transform.position = new Vector3(transform.position.x, X_news, transform.position.z); 
 		
+	
+		
 	}
 	
-	
+
 	
 }
+
