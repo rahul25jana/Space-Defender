@@ -8,6 +8,8 @@ public GameObject enemy_prefab;
 public float W_width = 10f;
 public float H_height = 8f;
 public float Enemy_Speed = 8f;
+public float spawnDelaySeconds = 1f;
+
 
 private bool Right_move = true;
 private float X_min;
@@ -34,7 +36,8 @@ private float X_max;
 			GameObject enemy = Instantiate(enemy_prefab, child.transform.position, Quaternion.identity) as GameObject;
 			enemy.transform.parent = child;
 	}
-	
+			SpawnEnemies();
+
 	}
 	
 	public void onDrawGizmos()
@@ -42,7 +45,56 @@ private float X_max;
 	{
 
 Gizmos.DrawWireCube(transform.position, new Vector3(W_width, H_height));
-	
+		
+ 		if(AllMembersAreDead()){
+ 			Debug.Log("My formation is empty :(");
+ 			SpawnUntilFull();
+ 		}
+ 	}
+ 
+ 	void SpawnEnemies(){
+ 		foreach( Transform position in transform){
+ 			GameObject enemy = Instantiate(enemyPrefab, position.transform.position, Quaternion.identity) as GameObject;
+ 			enemy.transform.parent = position;
+ 		}
+ 	}
+ 	
+ 	void SpawnUntilFull(){
+ 		Transform freePos = NextFreePosition();
+ 		GameObject enemy = Instantiate(enemyPrefab, freePos.position, Quaternion.identity) as GameObject;
+ 		enemy.transform.parent = freePos;
+ 		if(FreePositionExists()){
+ 			Invoke("SpawnUntilFull", spawnDelaySeconds);
+ 		}
+ 	}
+ 	
+ 	bool FreePositionExists(){
+ 		foreach(Transform position in transform){
+ 			if(position.childCount <= 0){
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 	}
+ 	
+ 	Transform NextFreePosition(){
+ 		foreach(Transform position in transform){
+ 			if(position.childCount <= 0){
+ 				return position;
+ 			}
+ 		}
+ 		return null;
+ 	}
+ 
+ 	bool AllMembersAreDead(){
+ 		foreach(Transform position in transform){
+ 			if(position.childCount > 0){
+ 				return false;
+ 			}
+ 		}
+ 		return true;
+  	}
+  }
 	}
 	
 	
