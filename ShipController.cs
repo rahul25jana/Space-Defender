@@ -11,7 +11,8 @@ public class Control_Player : MonoBehaviour {
 	public GameObject Missle_proj;
 	public float gun_speed;
 	public float firingrate = 0.5f;
-	
+	public AudioClip fireSound;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -34,6 +35,8 @@ public class Control_Player : MonoBehaviour {
 			
 		GameObject gun = Instantiate(Missle_proj,  transform.position, Quaternion.identity) as GameO bject ;
 		gun.rigidbody2D.velocity = new Vector3(0, gun_speed, 0);
+		AudioSource.PlayClipAtPoint(fireSound, transform.position);
+
 		
 	}
 	
